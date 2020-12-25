@@ -1,0 +1,94 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <title> 
+        UNKUZHAI UPLOAD 
+    </title> 
+</head> 
+  
+<body style="margin: auto; width: 50%; border: 3px; padding: 10px;"> 
+<h1 style="text-align: center">UNKUZHAI UPLOAD</h1>
+<style> video{height: 200px; width:400px; border:2px solid black;} </style>
+       	Video name  &nbsp;&nbsp;<input id="namebox" type="text"><br><br> 
+	<video id="myvid" controls></video>
+	<label id="UpProgress"></label><br><br>
+	<button id="select">Select Video</button>
+	<button id="upload">Upload Video</button>
+
+<!----------Libraries------>
+	<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script> 
+	<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script> 
+
+	<script id="Main script">
+
+//----------Variables--------//
+	 	var VidName, VidUrl;
+		var files = [];
+		var reader ;
+//----------Configuration--------//
+		var firebaseConfig = {
+    			apiKey: "AIzaSyDcxfOb41UJQp-nIdIVKWp2_MNlzryh_TQ",
+    			authDomain: "webvideo-6ff67.firebaseapp.com",
+    			databaseURL: "https://webvideo-6ff67-default-rtdb.firebaseio.com",
+    			projectId: "webvideo-6ff67",
+    			storageBucket: "webvideo-6ff67.appspot.com",
+    			messagingSenderId: "346426995368",
+    			appId: "1:346426995368:web:6b42d532e5421b2b13089d",
+    			measurementId: "G-7DHTF95K48"
+  			};
+  		// Initialize Firebase
+  		firebase.initializeApp(firebaseConfig);
+
+		document.getElementById("select").onclick = function(e){
+			var input = document.createElement("input");
+			input.type="file";
+			
+			input.onchange = e =>{
+				files = e.target.files;
+				reader = new FileReader();
+				reader.onload = function(){
+					document.getElementById("myvid").src=reader.result;
+				}
+				reader.readAsDataURL(files[0]);
+			}
+			input.click();
+		}
+
+		document.getElementById("upload").onclick = function(){
+			VidName = document.getElementById("namebox").value;
+			var uploadTask = firebase.storage().ref('videos/'+VidName+".mp4").put(files[0]);
+			
+			uploadTask.on('state_changed', function(snapshot){
+				var progress = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
+				document.getElementById('UpProgress').innerHTML = 'upload '+progress+' %';
+
+			},
+			function(error){
+
+				alert('error in saving the image');
+			},
+
+			function(){
+				uploadTask.snapshot.ref.getDownloadURL().then(function(url){
+					VidUrl = url;
+				firebase.database().ref('videos/'+VidName).set({
+					Name: VidName,
+					Link: VidUrl
+					});
+				alert('Video Added successfully');
+
+				}
+				);
+			});
+		
+		}
+
+
+	
+	</script>
+
+</body> 
+  
+</html>              

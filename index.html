@@ -1,0 +1,53 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <title> 
+        UNKUZHAI 
+    </title> 
+</head> 
+  
+<body> 
+	<h1 style="text-align: center">UNKUZHAI</h1>
+     	<div style="margin: auto; width: 50%; border: 3px; padding: 10px;">  
+            <input type="text" placeholder="Search Videos" id="searchbox" style="height:50px;font-size:18pt;width=500px"> 
+	    <button style="height:50px;font-size:18pt;" id="search">SEARCH</button>              
+     	 <br><br>
+	   <video id="myVid" src="" width="400" height="240" controls autoplay />
+	</div>
+<!----------Libraries------>
+	<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-database.js"></script> 
+	<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-storage.js"></script> 
+
+	<script id="Main1 script">
+
+//----------Variables--------//
+	 	var VidName, VidUrl;
+		
+//----------Configuration--------//
+		var firebaseConfig = {
+    			apiKey: "AIzaSyDcxfOb41UJQp-nIdIVKWp2_MNlzryh_TQ",
+    			authDomain: "webvideo-6ff67.firebaseapp.com",
+    			databaseURL: "https://webvideo-6ff67-default-rtdb.firebaseio.com",
+    			projectId: "webvideo-6ff67",
+    			storageBucket: "webvideo-6ff67.appspot.com",
+    			messagingSenderId: "346426995368",
+    			appId: "1:346426995368:web:6b42d532e5421b2b13089d",
+    			measurementId: "G-7DHTF95K48"
+  			};
+  		// Initialize Firebase
+  		firebase.initializeApp(firebaseConfig);
+
+		document.getElementById("search").onclick = function(){
+			VidName = document.getElementById('searchbox').value;
+			firebase.database().ref('videos/'+VidName).on('value', function(snapshot){
+				document.getElementById("myVid").src = snapshot.val().Link;
+			});
+		}
+
+		
+	</script>
+</body> 
+  
+</html>              
